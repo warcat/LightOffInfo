@@ -10,7 +10,7 @@ public class JsonSchedule
     {
         Name = name,
         Condition = condition.ToCondition(),
-        Offline = ParseOfflineTime()
+        Offline = ParseOfflineTime().ToArray()
     };
 
     private IEnumerable<(TimeSpan, TimeSpan)> ParseOfflineTime()
@@ -43,13 +43,13 @@ public class JsonCondition
         if (daysOfWeek != null)
             return new Condition
             {
-                DaysOfWeek = ParseInts(daysOfWeek).Select(x => (DayOfWeek)x)
+                DaysOfWeek = ParseInts(daysOfWeek).Select(x => (DayOfWeek)x).ToArray()
             };
 
         if (daysOfMonth != null)
             return new Condition
             {
-                DaysOfMonth = ParseInts(daysOfMonth)
+                DaysOfMonth = ParseInts(daysOfMonth).ToArray()
             };
 
         throw new NotSupportedException("Condition type is not supported");
