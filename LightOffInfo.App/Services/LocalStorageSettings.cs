@@ -20,6 +20,9 @@ internal class LocalStorageSettings
     public async Task<Location> ReadCurrentLocation()
     {
 		var location = await _localStorage.GetItemAsync<Location>("CurrentLocation");
+		if (location == default)
+			return default;
+
 		location.Schedules = await _localStorage.GetItemAsync<Schedule[]>("CurrentLocation_Schedules");
 
 		return location;
