@@ -1,9 +1,166 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>LightOff - Розклад відключень електрики</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1 class="display-1 text-center mb-1">@_currentLocation?.Name <button class="btn btn-lg btn-dark"><span class="oi oi-list" @onclick="@(() => ToggleLocationsList())"></span></button></h1>
+<div>
+	@if (_isToday)
+	{
+		<div class="text-center text-muted h5">Графік відключення світла</div>
+	}
+	else
+	{
+		<div class="text-center text-muted h5"><abbr title="Графік може буде змінений УкрЕнерго або місцевим ОблЕнерго через нестачу потужності або нові обстріли йобаної русні">Можливий</abbr> графік відключення</div>
+	}
+	<div class="text-center mb-4 text-muted h3">@FormatCurrentDate()</div>
+</div>
 
-Welcome to your new app. <span class="oi oi-cog"/>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<button class="carousel-control-prev text-secondary" style="display:@(_isToday ? "none" : "flex")" type="button" @onclick="@(() => ChangeDate(_currentDate.AddDays(-1)))">
+	<span class="oi oi-chevron-left carousel-control-prev-icon" aria-hidden="true"></span>
+	<span class="mb-3"><span class="h3">@_currentDate.AddDays(-1).Day</span> / <small>@_currentDate.AddDays(-1).Month</small></span>
+</button>
+<button class="carousel-control-next text-secondary" type="button" @onclick="@(() => ChangeDate(_currentDate.AddDays(1)))">
+	<span class="mb-3"><span class="h3">@_currentDate.AddDays(1).Day</span> / <small>@_currentDate.AddDays(1).Month</small></span>
+	<span class="oi oi-chevron-right carousel-control-next-icon" aria-hidden="true"></span>
+</button>
+
+@if (_schedules?.Any() ?? false)
+{
+	var isFirst = true;
+	foreach (var schedule in _schedules)
+	{
+		<QueueSchedule CurrentLocation="@_currentLocation" Schedule="@schedule" IsFirst="@isFirst" />
+		if (isFirst)
+			isFirst = false;
+	}
+}
+else
+{
+	<p class="text-muted text-center">Немає жодного розкладу для цієї локації</p>
+}
+
+<p class="text-center text-muted mt-3 small">Версія 1.0</p>
+
+<div class="offcanvas offcanvas-top show" style="visibility:@(_showLocationsList ? "visible" : "hidden")" tabindex="-1" role="dialog">
+	<div class="offcanvas-header">
+		<h5 class="offcanvas-title">Оберіть Ваше місто / локацію</h5>
+		<button type="button" class="btn-close" @onclick=@(() => ToggleLocationsList())></button>
+	</div>
+	<div class="offcanvas-body small">
+		<ul class="list-group">
+			@if (_locations?.Any() ?? false)
+				@foreach (var location in _locations)
+				{
+					var isChecked = location == _currentLocation;
+					<li class="list-group-item">
+						@if (isChecked)
+						{
+							<input @onchange="@(() => SelectLocation(location))" class="form-check-input me-1" type="radio" id="@location.Name" name="listGroupRadio" checked>
+						}
+						else
+						{
+							<input @onchange="@(() => SelectLocation(location))" class="form-check-input me-1" type="radio" id="@location.Name" name="listGroupRadio">
+						}
+
+						<label class="form-check-label" for="@location.Name">@location.Name</label>
+					</li>
+				}
+		</ul>
+	</div>
+</div>
+
+@inject HttpClient Http
+@inject LocalStorageSettings Settings
+
+@code {
+	Location[] _locations;
+	Location _currentLocation;
+	Schedule[] _schedules;
+	DateTime _currentDate = DateTime.Today;
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		// Has cache:
+		// 1. Get locations from cache
+		// 2. Select current location from settings
+		// 3. Read locations, read schedules from server
+		// 4. Update cache from 3.
+
+		// No cache:
+		// 1. Read locations, read schedules from server
+		// 2. Update cache from 1.
+		// 3. Select first location
+
+		var storedLocation = await Settings.ReadCurrentLocation();
+		if (storedLocation != default)
+			await SelectLocation(storedLocation);
+
+		_locations = await new Locations("./data/locations.json").ReadLocations(Http);
+		foreach (var location in _locations)
+		{
+			await location.ReadScheduleAsync(Http);
+		}
+
+		if (_currentLocation == default && _locations.Any())
+		{
+			await SelectLocation(_locations.FirstOrDefault());
+		}
+		else if (_currentLocation != default && _locations.Any())
+		{
+			var freshData = _locations.FirstOrDefault(x => x.Name == _currentLocation.Name);
+			if (freshData != null)
+				await SelectLocation(freshData);
+		}			
+	}
+
+	private string FormatCurrentDate()
+	{
+		var strMonth = _currentDate.Month switch
+		{
+			1 => "Січня",
+			2 => "Лютого",
+			3 => "Березня",
+			4 => "Квітня",
+			5 => "Травня",
+			6 => "Червня",
+			7 => "Липня",
+			8 => "Серпня",
+			9 => "Вересня",
+			10 => "Жовтня",
+			11 => "Листопада",
+			12 => "Грудня",
+		};
+
+		return $"{_currentDate.Day} {strMonth}";
+	}
+
+	bool _isToday = true;
+	private void ChangeDate(DateTime newDate)
+	{
+		_currentDate = newDate;
+		_isToday = _currentDate == DateTime.Today;
+		_schedules = _currentLocation.Schedules.Where(s => s.Condition.IsOfflineOnDate(_currentDate)).ToArray();
+	}
+
+	bool _showLocationsList = false;
+	private void ToggleLocationsList()
+	{
+		_showLocationsList = !_showLocationsList;
+	}
+
+	private async Task SelectLocation(Location location)
+	{
+		if (location.Schedules == null)
+			await location.ReadScheduleAsync(Http);
+
+		_currentLocation = location;
+		_schedules = _currentLocation.Schedules.Where(s => s.Condition.IsOfflineOnDate(_currentDate)).ToArray();
+		
+		await Settings.WriteCurrentLocation(location);
+
+		ChangeDate(DateTime.Today);
+		_showLocationsList = false;
+	}
+}
