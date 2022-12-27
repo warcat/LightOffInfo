@@ -2,9 +2,24 @@
 
 public class Schedule
 {
+    public bool? IsExpanded { get; set; }
+    public string LocationName { get; set; }
+
     public string Name { get; set; }
-    public IEnumerable<(TimeSpan, TimeSpan)> Offline {get;set; }
+    public Offline[] Offline { get; set; }
     public Condition Condition { get; set; }
+}
+
+public class Offline
+{
+    public TimeSpan From { get; set; }
+    public TimeSpan To { get; set; }
+
+    public Offline(TimeSpan from, TimeSpan to)
+    {
+        From = from;
+        To = to;
+    }
 }
 
 public class Condition

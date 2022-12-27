@@ -1,0 +1,119 @@
+﻿
+<div class="row mt-2">
+	<div class="col text-center">
+		<a class="btn btn-lg @_btnClass h1" @onclick="ToggleQueue"><span class="oi @_chevronClass"></span> @Schedule.Name</a>
+		<div class="h4 mb-4" style="display: @(_isOpen ? "block" : "none")">
+			@foreach (var item in _vm)
+			{
+				<p class="@item.TextCss"><span class="oi @item.IconCss" /> @item.ToString()</p>
+			}
+		</div>
+	</div>
+</div>
+
+@inject ILocalStorageService LocalStorageService
+@inject LocalStorageSettings Settings
+
+@code {
+	[Parameter]
+	public Schedule Schedule { get; set; }
+
+	[Parameter]
+	public bool IsFirst { get; set; }
+
+	[Parameter]
+	public Location CurrentLocation { get; set; }
+
+	ScheduleVM[] _vm;
+
+	bool _isOpen = true;
+	string _chevronClass = "oi-chevron-top";
+	string _btnClass = "btn-outline-secondary";
+
+	protected override void OnParametersSet()
+	{
+		base.OnParametersSet();
+		_isOpen = Schedule.IsExpanded.HasValue ? Schedule.IsExpanded.Value : IsFirst;
+		SetCssClasses();
+		_vm = ScheduleVM.BuildVm(Schedule).ToArray();
+	}
+
+	private async Task ToggleQueue()
+	{
+		_isOpen = !_isOpen;
+		SetCssClasses();
+		await WriteSettingIsOpen(_isOpen);
+	}
+
+	private void SetCssClasses()
+	{
+		_chevronClass = _isOpen ? "oi-chevron-top" : "oi-chevron-bottom";
+		_btnClass = _isOpen ? "btn-outline-secondary" : "btn-secondary";
+	}
+
+	private async Task WriteSettingIsOpen(bool value)
+	{
+		if (Schedule == default || Schedule.LocationName == default)
+			return;
+
+		Schedule.IsExpanded = value;
+		CurrentLocation.Schedules.Where(s => s.Name == Schedule.Name).ToList().ForEach(s => s.IsExpanded = value);
+		await Settings.WriteCurrentLocation(CurrentLocation);
+	}
+
+	private class ScheduleVM
+	{
+		public TimeSpan From;
+		public TimeSpan To;
+		public string TextCss;
+		public string IconCss;
+
+		public override string ToString() => $"{From.ToString(@"h\:mm")} ⋯ {To.ToString(@"h\:mm")}";
+
+		public ScheduleVM(TimeSpan from, TimeSpan to, bool isOffline)
+		{
+			From = from;
+			To = to;
+			if (isOffline)
+			{
+				TextCss = "text-warning";
+				IconCss = "oi-ban";
+			}
+			else
+			{
+				TextCss = "text-success";
+				IconCss = "oi-bolt";
+			}
+		}
+
+		public static IEnumerable<ScheduleVM> BuildVm(Schedule s)
+		{
+			var endOfTheDay = TimeSpan.FromHours(23) + TimeSpan.FromMinutes(59);
+			var offlineArray = s.Offline.ToArray();
+			for (int i = 0; i < offlineArray.Length; i++)
+			{
+				var offline = offlineArray[i];
+				var nextOffline = i < offlineArray.Length - 1 ? offlineArray[i + 1] : default;
+
+				if (offline.From > TimeSpan.Zero && i == 0)
+				{
+					yield return new ScheduleVM(TimeSpan.Zero, offline.From, false);
+				}
+
+				yield return new ScheduleVM(offline.From, offline.To, true);
+
+				if (nextOffline != default)
+				{
+					yield return new ScheduleVM(offline.To, nextOffline.From, false);
+				}
+				else
+				{
+					if (offline.To < endOfTheDay)
+					{
+						yield return new ScheduleVM(offline.To, endOfTheDay, false);
+					}
+				}
+			}
+		}
+	}
+}
