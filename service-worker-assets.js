@@ -33,11 +33,11 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-pyXlWEAVQHiHAr3oYetjcHG8WVmtTsZak9pHF4wV1io=",
+      "hash": "sha256-AB9DGOyG5hLYYAqE4fATh3xPLg8vuTVvuZrGWwWD1EA=",
       "url": "_framework\/blazor.boot.json"
     },
     {
-      "hash": "sha256-VR+ea6+rarE5kZ4244DBejLl+FW8iBuSVzOJkubGYwY=",
+      "hash": "sha256-azN+yaozsB6WngvyRtaEkjBD9scZTt4u64JQLQZAdoM=",
       "url": "_framework\/LightOffInfo.App.dll"
     },
     {
@@ -49,11 +49,11 @@
       "url": "_framework\/Majorsoft.Blazor.Extensions.BrowserStorage.dll"
     },
     {
-      "hash": "sha256-SiSTB5BrnrNtFOpHMZdW36WWDZVre9U3CfiY2nyW340=",
+      "hash": "sha256-IAcsyyflCVC\/41WKtHsUxdA2sb2F1CKX68EWNmzkeUw=",
       "url": "_framework\/Microsoft.AspNetCore.Components.dll"
     },
     {
-      "hash": "sha256-fsWQog9aNAyzw9xUKD6gpQK0lHXNA+\/zYF3i5ZXNOlI=",
+      "hash": "sha256-fDcLa00hnsg03nj1o21IcDXiuDUpGZxYQ1aGYMN\/OcQ=",
       "url": "_framework\/Microsoft.AspNetCore.Components.Web.dll"
     },
     {
@@ -109,7 +109,7 @@
       "url": "_framework\/System.Collections.Concurrent.dll"
     },
     {
-      "hash": "sha256-V452uBUbJtkBRMVb3Qsvu2cUGB3aoAq2FTynsTUb1tg=",
+      "hash": "sha256-lX0GzMPodtntkeSzDK6EFOfT\/ym+SLXPyneOQNBU7\/o=",
       "url": "_framework\/System.Collections.dll"
     },
     {
@@ -153,7 +153,7 @@
       "url": "_framework\/System.Runtime.CompilerServices.Unsafe.dll"
     },
     {
-      "hash": "sha256-MjtcKrvRdZ3KJFcUOF6MsedrsckqOkROnjql63xahKY=",
+      "hash": "sha256-9RrefFuHKoCQh7NdN99Brif7pLLyOEpd1lPQPeMKzzM=",
       "url": "_framework\/System.Runtime.dll"
     },
     {
@@ -249,5 +249,5 @@
       "url": "manifest.json"
     }
   ],
-  "version": "\/PzJ4i6U"
+  "version": "65HK9Q5c"
 };
