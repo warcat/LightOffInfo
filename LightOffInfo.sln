@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOffInfo.App", "LightOffInfo.App\LightOffInfo.App.csproj", "{86E5E45A-7900-4547-93CC-3078E66A2C0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightOffInfo.App", "LightOffInfo.App\LightOffInfo.App.csproj", "{86E5E45A-7900-4547-93CC-3078E66A2C0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOffInfo.Data", "LightOffInfo.Data\LightOffInfo.Data.csproj", "{6E9240B0-05C3-46BB-A707-1CA4295A4CF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightOffInfo.Data", "LightOffInfo.Data\LightOffInfo.Data.csproj", "{6E9240B0-05C3-46BB-A707-1CA4295A4CF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

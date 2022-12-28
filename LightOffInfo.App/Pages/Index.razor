@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using LightOffInfo.App.Services
 @implements IDisposable
 
 <PageTitle>LightOff - Розклад відключень електрики</PageTitle>
@@ -33,20 +34,22 @@
 	<span class="oi oi-chevron-right carousel-control-next-icon" aria-hidden="true"></span>
 </button>
 
-@if (_schedules?.Any() ?? false)
-{
-	var isFirst = true;
-	foreach (var schedule in _schedules)
+<SwipeArea OnSwipe="OnSwipe" Class="pt-1">
+	@if (_schedules?.Any() ?? false)
 	{
-		<QueueSchedule CurrentLocation="@_currentLocation" Schedule="@schedule" IsFirst="@isFirst" IsToday="@_isToday" />
-		if (isFirst)
-			isFirst = false;
+		var isFirst = true;
+		foreach (var schedule in _schedules)
+		{
+			<QueueSchedule CurrentLocation="@_currentLocation" Schedule="@schedule" IsFirst="@isFirst" IsToday="@_isToday" />
+			if (isFirst)
+				isFirst = false;
+		}
 	}
-}
-else
-{
-	<p class="text-muted text-center">Немає жодного розкладу для цієї локації</p>
-}
+	else
+	{
+		<p class="text-muted text-center">Немає жодного розкладу для цієї локації</p>
+	}
+</SwipeArea>
 
 <p class="text-center text-muted mt-3 small">Версія 1.0</p>
 
@@ -127,7 +130,7 @@ else
 			var freshData = _locations.FirstOrDefault(x => x.Name == _currentLocation.Name);
 			if (freshData != null)
 				await SelectLocation(freshData);
-		}			
+		}
 	}
 
 	private string FormatCurrentDate()
@@ -154,6 +157,9 @@ else
 	bool _isToday = true;
 	private void ChangeDate(DateTime newDate)
 	{
+		if (newDate < DateTime.Today)
+			return;
+
 		_currentDate = newDate;
 		_isToday = _currentDate == DateTime.Today;
 		_schedules = _currentLocation.Schedules.Where(s => s.Condition.IsOfflineOnDate(_currentDate)).ToArray();
@@ -172,7 +178,7 @@ else
 
 		_currentLocation = location;
 		_schedules = _currentLocation.Schedules.Where(s => s.Condition.IsOfflineOnDate(_currentDate)).ToArray();
-		
+
 		await Settings.WriteCurrentLocation(location);
 
 		ChangeDate(DateTime.Today);
@@ -180,9 +186,24 @@ else
 	}
 
 	System.Threading.Timer? _timer;
-    private DateTime _tick;
+	private DateTime _tick;
 	public void Dispose()
 	{
 		_timer?.Dispose();
+	}
+
+	private void OnSwipe(SwipeDirection swipeDirection)
+	{
+		switch (swipeDirection)
+		{
+			case SwipeDirection.LeftToRight:
+				ChangeDate(_currentDate.AddDays(-1));
+				break;
+			case SwipeDirection.RightToLeft:
+				ChangeDate(_currentDate.AddDays(1));
+				break;
+			default:
+				break;
+		}
 	}
 }
