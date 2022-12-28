@@ -33,11 +33,11 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-2vXbyPt7h8NejLW7lhS\/3cE2LIwDko6MmB7WyF5QZ5A=",
+      "hash": "sha256-pyXlWEAVQHiHAr3oYetjcHG8WVmtTsZak9pHF4wV1io=",
       "url": "_framework\/blazor.boot.json"
     },
     {
-      "hash": "sha256-WLcZPLeehKYDGB668Dz+0z0pJRfq5+F1DxpOAuKhG7Q=",
+      "hash": "sha256-VR+ea6+rarE5kZ4244DBejLl+FW8iBuSVzOJkubGYwY=",
       "url": "_framework\/LightOffInfo.App.dll"
     },
     {
@@ -249,5 +249,5 @@
       "url": "manifest.json"
     }
   ],
-  "version": "ntGVxRwM"
+  "version": "\/PzJ4i6U"
 };
