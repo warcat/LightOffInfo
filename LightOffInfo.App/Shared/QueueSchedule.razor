@@ -1,11 +1,12 @@
-﻿
+﻿@implements IDisposable
+
 <div class="row mt-2">
 	<div class="col text-center">
 		<a class="btn btn-lg @_btnClass h1" @onclick="ToggleQueue"><span class="oi @_chevronClass"></span> @Schedule.Name</a>
 		<div class="h4 mb-4" style="display: @(_isOpen ? "block" : "none")">
 			@foreach (var item in _vm)
 			{
-				<p class="@item.TextCss"><span class="oi @item.IconCss" /> @item.ToString()</p>
+				<p class="@GetTextCss(item, _tick)"><span class="oi @item.IconCss" /> @item.ToString()</p>
 			}
 		</div>
 	</div>
@@ -24,11 +25,27 @@
 	[Parameter]
 	public Location CurrentLocation { get; set; }
 
+	[Parameter]
+	public bool IsToday { get; set; }
+
 	ScheduleVM[] _vm;
 
 	bool _isOpen = true;
 	string _chevronClass = "oi-chevron-top";
 	string _btnClass = "btn-outline-secondary";
+
+	protected override Task OnInitializedAsync()
+	{
+		_tick = DateTime.Now;
+		_timer = new System.Threading.Timer(async _ =>
+		{
+			_tick = DateTime.Now.ToLocalTime();
+			SetCssClasses();
+			await InvokeAsync(StateHasChanged);
+		}, null, 0, 1000);
+
+		return base.OnInitializedAsync();
+	}
 
 	protected override void OnParametersSet()
 	{
@@ -36,6 +53,40 @@
 		_isOpen = Schedule.IsExpanded.HasValue ? Schedule.IsExpanded.Value : IsFirst;
 		SetCssClasses();
 		_vm = ScheduleVM.BuildVm(Schedule).ToArray();
+	}
+
+	private string GetTextCss(ScheduleVM vm, DateTime tick)
+	{
+		if (!IsToday)
+			return vm.TextCss;
+
+		if (vm.To < tick.TimeOfDay)
+			return "text-muted text-black-50 small";
+
+		if (vm.IsOffline && vm.From < tick.TimeOfDay && vm.To > tick.TimeOfDay)
+			return "text-danger fw-bold";
+
+		if (vm.From < tick.TimeOfDay && vm.To > tick.TimeOfDay)
+			return vm.TextCss + " fw-bold";
+
+		return vm.TextCss;
+	}
+
+	private string GetBtnClass(DateTime tick)
+	{
+		if (_vm == null)
+			return "";
+
+		var isOffline = _vm.Any(vm => vm.IsOffline && vm.From < tick.TimeOfDay && vm.To > tick.TimeOfDay);
+		var subClass = _isOpen ? "btn-outline-" : "btn-";
+		var offlineClass = isOffline ? "danger" : "success";
+		if (!IsToday)
+			offlineClass = "secondary";
+
+		if (_vm.All(vm => vm.To < tick.TimeOfDay))
+			offlineClass = "secondary";
+
+		return subClass + offlineClass;
 	}
 
 	private async Task ToggleQueue()
@@ -48,7 +99,7 @@
 	private void SetCssClasses()
 	{
 		_chevronClass = _isOpen ? "oi-chevron-top" : "oi-chevron-bottom";
-		_btnClass = _isOpen ? "btn-outline-secondary" : "btn-secondary";
+		_btnClass = GetBtnClass(_tick);
 	}
 
 	private async Task WriteSettingIsOpen(bool value)
@@ -67,14 +118,16 @@
 		public TimeSpan To;
 		public string TextCss;
 		public string IconCss;
+		public bool IsOffline;
 
 		public override string ToString() => $"{From.ToString(@"h\:mm")} ⋯ {To.ToString(@"h\:mm")}";
 
 		public ScheduleVM(TimeSpan from, TimeSpan to, bool isOffline)
 		{
+			IsOffline = isOffline;
 			From = from;
 			To = to;
-			if (isOffline)
+			if (IsOffline)
 			{
 				TextCss = "text-warning";
 				IconCss = "oi-ban";
@@ -115,5 +168,12 @@
 				}
 			}
 		}
+	}
+
+	System.Threading.Timer? _timer;
+	private DateTime _tick;
+	public void Dispose()
+	{
+		_timer?.Dispose();
 	}
 }

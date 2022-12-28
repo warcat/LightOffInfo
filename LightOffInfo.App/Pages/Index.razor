@@ -1,4 +1,5 @@
 ﻿@page "/"
+@implements IDisposable
 
 <PageTitle>LightOff - Розклад відключень електрики</PageTitle>
 
@@ -12,7 +13,14 @@
 	{
 		<div class="text-center text-muted h5"><abbr title="Графік може буде змінений УкрЕнерго або місцевим ОблЕнерго через нестачу потужності або нові обстріли йобаної русні">Можливий</abbr> графік відключення</div>
 	}
-	<div class="text-center mb-4 text-muted h3">@FormatCurrentDate()</div>
+	<div class="text-center mb-4 h3">
+		@FormatCurrentDate()
+		@if (_isToday)
+		{
+			<span>, </span>
+			@_tick.ToString("h:mm:ss")
+		}
+	</div>
 </div>
 
 
@@ -30,7 +38,7 @@
 	var isFirst = true;
 	foreach (var schedule in _schedules)
 	{
-		<QueueSchedule CurrentLocation="@_currentLocation" Schedule="@schedule" IsFirst="@isFirst" />
+		<QueueSchedule CurrentLocation="@_currentLocation" Schedule="@schedule" IsFirst="@isFirst" IsToday="@_isToday" />
 		if (isFirst)
 			isFirst = false;
 	}
@@ -82,6 +90,13 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
+		_tick = DateTime.Now;
+		_timer = new System.Threading.Timer(async _ =>
+		{
+			_tick = DateTime.Now.ToLocalTime();
+			await InvokeAsync(StateHasChanged);
+		}, null, 0, 1000);
+
 		// Has cache:
 		// 1. Get locations from cache
 		// 2. Select current location from settings
@@ -162,5 +177,12 @@ else
 
 		ChangeDate(DateTime.Today);
 		_showLocationsList = false;
+	}
+
+	System.Threading.Timer? _timer;
+    private DateTime _tick;
+	public void Dispose()
+	{
+		_timer?.Dispose();
 	}
 }
