@@ -33,11 +33,11 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-oUEtJJ+Gh9pMvIeGFvolXnzXklDTJ4\/NoOn9y62MAVU=",
+      "hash": "sha256-2vXbyPt7h8NejLW7lhS\/3cE2LIwDko6MmB7WyF5QZ5A=",
       "url": "_framework\/blazor.boot.json"
     },
     {
-      "hash": "sha256-qtzwK75gwY9YegId5V0uj5LtRFkdRipLc\/CabLHDMsA=",
+      "hash": "sha256-WLcZPLeehKYDGB668Dz+0z0pJRfq5+F1DxpOAuKhG7Q=",
       "url": "_framework\/LightOffInfo.App.dll"
     },
     {
@@ -117,7 +117,7 @@
       "url": "_framework\/System.ComponentModel.dll"
     },
     {
-      "hash": "sha256-02K54LzRApNjsA3t5GkK4TarjStV7gRg8qEqzcXkcRA=",
+      "hash": "sha256-+3iirptxTfFlkzO5X\/vh1APvc3XK8AbCwVPdpdijBXc=",
       "url": "_framework\/System.Linq.dll"
     },
     {
@@ -137,7 +137,7 @@
       "url": "_framework\/System.Net.Primitives.dll"
     },
     {
-      "hash": "sha256-kjwMeiarQIGz9ivLpEZPXGuzdoIdOfzA3u1UjRzD4pM=",
+      "hash": "sha256-gzcqmZHrNY2DMTyTWt+248OWUCXkDzneuf69RLymuto=",
       "url": "_framework\/System.Private.CoreLib.dll"
     },
     {
@@ -153,7 +153,7 @@
       "url": "_framework\/System.Runtime.CompilerServices.Unsafe.dll"
     },
     {
-      "hash": "sha256-EkXQqjKjwaALxjYxUMSq63V\/JPMJJQkr4T24wuqm9r4=",
+      "hash": "sha256-MjtcKrvRdZ3KJFcUOF6MsedrsckqOkROnjql63xahKY=",
       "url": "_framework\/System.Runtime.dll"
     },
     {
@@ -249,5 +249,5 @@
       "url": "manifest.json"
     }
   ],
-  "version": "+nS0zOd1"
+  "version": "ntGVxRwM"
 };
