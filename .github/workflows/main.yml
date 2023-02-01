@@ -23,8 +23,8 @@ jobs:
         run: dotnet publish LightOffInfo.App/LightOffInfo.App.csproj -c Release -o release --nologo
       
       # changes the base-tag in index.html from '/' to 'LightOffInfo' to match GitHub Pages repository subdirectory
-      - name: Change base-tag in index.html from / to LightOffInfo
-        run: sed -i 's/<base href="\/" \/>/<base href="\/LightOffInfo\/" \/>/g' release/wwwroot/index.html
+      #- name: Change base-tag in index.html from / to LightOffInfo
+      #  run: sed -i 's/<base href="\/" \/>/<base href="\/LightOffInfo\/" \/>/g' release/wwwroot/index.html
       
       # fix integrity issue
       - name: Fix service-worker-assets.js hashes
