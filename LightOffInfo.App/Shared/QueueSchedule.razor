@@ -69,7 +69,7 @@
 		if (vm.From < tick.TimeOfDay && vm.To > tick.TimeOfDay)
 			return vm.TextCss + " fw-bold";
 
-		return vm.TextCss;
+		return vm.TextCss + " small";
 	}
 
 	private string GetBtnClass(DateTime tick)
