@@ -33,11 +33,11 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-TrfNcYcGbO8bCQdkImGzfITkf+Kkgt9qfAcYEwCftHU=",
+      "hash": "sha256-RCcJrJs\/AVlHU1\/qA+Ty3689zG\/wYZMk\/KJv0bQBNNc=",
       "url": "_framework\/blazor.boot.json"
     },
     {
-      "hash": "sha256-KeJFmZlkhu0RqSm+ql9\/+nTpLA1y62530yhMOE5jiqU=",
+      "hash": "sha256-uY1r7iYKCTwvLXNn81grh1CkLTJdiwYwJ1kaeeK6CTQ=",
       "url": "_framework\/LightOffInfo.App.dll"
     },
     {
@@ -221,8 +221,12 @@
       "url": "data\/locations.json"
     },
     {
-      "hash": "sha256-XR3q8I8CiEuZQbIRLsfRjd07QGGQHfCkq1KxhGkfPFM=",
+      "hash": "sha256-TMz5PndVrKsFZr8f6jOG8a4wj9Yn6+qDWsv6bSmBHEs=",
       "url": "data\/sumy_4_2.json"
+    },
+    {
+      "hash": "sha256-WZ3fo+V6dOLIts90\/J1hU\/7+L99e24BvJIhgNynqRnY=",
+      "url": "data\/sumy_feb_23.jpg"
     },
     {
       "hash": "sha256-g5Ebw\/oNjDWNIAM1TfkV4KzfNirhLRCnWoUT3rdqsm0=",
@@ -249,5 +253,5 @@
       "url": "manifest.json"
     }
   ],
-  "version": "\/Y22DEPD"
+  "version": "ig46Eb21"
 };

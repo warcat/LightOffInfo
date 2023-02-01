@@ -7,7 +7,7 @@
   "linkerEnabled": true,
   "resources": {
     "assembly": {
-      "LightOffInfo.App.dll": "sha256-KeJFmZlkhu0RqSm+ql9\/+nTpLA1y62530yhMOE5jiqU=",
+      "LightOffInfo.App.dll": "sha256-uY1r7iYKCTwvLXNn81grh1CkLTJdiwYwJ1kaeeK6CTQ=",
       "LightOffInfo.Data.dll": "sha256-JCAMzjkk5ZydaRFRAHLWvPVYqGs7UMjRI+pnFUdJBC0=",
       "Majorsoft.Blazor.Extensions.BrowserStorage.dll": "sha256-CzSPfGpINxopBMIcknFAfkTmJTHWzMsUyJiq9fo538Q=",
       "Microsoft.AspNetCore.Components.dll": "sha256-IAcsyyflCVC\/41WKtHsUxdA2sb2F1CKX68EWNmzkeUw=",
